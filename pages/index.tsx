@@ -2,6 +2,11 @@ import type { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
 import Head from 'next/head';
 import Image from 'next/image';
+
+// components
+import HeaderSidebar from '../src/components/HeaderSidebar';
+
+// styles
 import styles from '../styles/Home.module.css';
 
 type Movies = {
@@ -12,11 +17,24 @@ type Movies = {
   imageUrl: string;
 };
 
-interface HomeProps {
+interface IHomeProps {
   movies: Movies[];
 }
 
-const Home: NextPage<HomeProps> = ({ movies }) => {
+const Home: NextPage<IHomeProps> = ({ movies }) => {
+  const menus = [
+    {
+      icon: '',
+      key: 'home',
+      title: 'Home',
+    },
+    {
+      icon: '',
+      key: 'favorite',
+      title: 'Favorite',
+    },
+  ];
+
   const handleClickMovie = (movie: Movies) => {
     const { id } = movie || {};
     localStorage.setItem('movieData', JSON.stringify(movie));
@@ -34,6 +52,7 @@ const Home: NextPage<HomeProps> = ({ movies }) => {
       </Head>
 
       <main className={styles.main}>
+        <HeaderSidebar menus={menus} />
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
@@ -77,7 +96,7 @@ const Home: NextPage<HomeProps> = ({ movies }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+export const getServerSideProps: GetServerSideProps<IHomeProps> = async () => {
   const data = await fetch(
     'https://private-2fff44-bncfetest.apiary-mock.com/movies',
     {
