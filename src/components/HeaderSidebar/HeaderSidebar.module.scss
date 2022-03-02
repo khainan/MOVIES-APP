@@ -6,7 +6,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: calc(100% - 32px);
+  width: 100%;
+  height: 60px;
   background-color: #fff;
   border-bottom: 1px solid #e9ecef;
   z-index: 10;
@@ -67,6 +68,7 @@
     border-left: 4px solid #fff;
     cursor: pointer;
     font-weight: 600;
+    margin-bottom: 12px;
 
     &.active,
     &:hover {
@@ -78,10 +80,10 @@
       opacity: 0.8;
     }
 
-    > img {
-      height: 24px;
-      width: 24px;
-      margin-right: 8px;
+    > p {
+      font-size: 16px;
+      font-weight: 600;
+      margin-left: 8px;
     }
   }
 }
@@ -99,7 +101,7 @@
     opacity: 0;
     width: 0px;
 
-    &.open {
+    &-open {
       opacity: 1;
       width: 280px;
     }

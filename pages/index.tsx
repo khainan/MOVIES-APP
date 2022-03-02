@@ -1,13 +1,15 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
 import Head from 'next/head';
-import Image from 'next/image';
+
+// assets
+import homeIcon from '../public/assets/home-icon.png';
 
 // components
 import HeaderSidebar from '../src/components/HeaderSidebar';
 
 // styles
-import styles from '../styles/Home.module.css';
+import styles from '../styles/Home.module.scss';
 
 type Movies = {
   id: string;
@@ -24,12 +26,12 @@ interface IHomeProps {
 const Home: NextPage<IHomeProps> = ({ movies }) => {
   const menus = [
     {
-      icon: '',
+      icon: homeIcon,
       key: 'home',
       title: 'Home',
     },
     {
-      icon: '',
+      icon: homeIcon,
       key: 'favorite',
       title: 'Favorite',
     },
@@ -51,6 +53,9 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HeaderSidebar menus={menus} />
+      <div className={styles.content}>
+        Test Content
+      </div>
     </div>
   );
 };

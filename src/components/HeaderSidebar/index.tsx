@@ -7,13 +7,13 @@ import hamburgerIcon from './assets/hamburger-icon.png';
 import userIcon from './assets/user.png';
 
 // styles
-import './styles.scss';
+import styles from './HeaderSidebar.module.scss';
 
 type Menu = {
-  icon: string;
+  icon: any;
   key: string;
   title: string;
-}
+};
 interface IHeaderSidebarProps {
   menus: Menu[];
 }
@@ -42,33 +42,29 @@ const HeaderSidebar = (props: IHeaderSidebarProps) => {
   });
 
   return (
-    <div className="dashboard-header-sidebar" ref={ref}>
-      <div className="dashboard-header">
-        <div className="dashboard-header-logo">
-          <Image
-            className="hamburger-icon"
-            src={hamburgerIcon}
-            alt=""
-            onClick={handleOpenSidebar}
-          />
-          <h1>D.U</h1>
+    <div className={styles['dashboard-header-sidebar']} ref={ref}>
+      <div className={styles['dashboard-header']}>
+        <div className={styles['dashboard-header-logo']}>
+          <div className={styles['hamburger-icon']}>
+            <Image src={hamburgerIcon} alt="" onClick={handleOpenSidebar} />
+          </div>
+          <h1></h1>
         </div>
-        <div className="dashboard-header-user">
+        <div className={styles['dashboard-header-user']}>
           <p>
             Hello, <span>{'User Name'}</span>
           </p>
-          <Image alt="" src={userIcon} />
+          <Image alt="" src={userIcon} width={24} height={24} />
         </div>
       </div>
-      <div className={classNames('dashboard-sidebar', { open: open })}>
+      <div
+        className={
+          open ? styles['dashboard-sidebar open'] : styles['dashboard-sidebar']
+        }
+      >
         {(menus || []).map((menu: Menu, index: number) => (
-          <div
-            className={classNames('dashboard-sidebar-menu', {
-              active: menu.key === 'home',
-            })}
-            key={index}
-          >
-            <Image alt="" src={menu.icon} />
+          <div className={styles['dashboard-sidebar-menu']} key={index}>
+            <Image alt="" src={menu.icon} width={24} height={24} />
             <p>{menu.title}</p>
           </div>
         ))}
