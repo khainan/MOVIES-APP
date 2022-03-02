@@ -1,9 +1,30 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import type { GetServerSideProps, NextPage } from 'next';
+import Router from 'next/router';
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from '../styles/Home.module.css';
 
-const Home: NextPage = () => {
+type Movies = {
+  id: string;
+  title: string;
+  year: number;
+  rating: number;
+  imageUrl: string;
+};
+
+interface HomeProps {
+  movies: Movies[];
+}
+
+const Home: NextPage<HomeProps> = ({ movies }) => {
+  const handleClickMovie = (movie: Movies) => {
+    const { id } = movie || {};
+    localStorage.setItem('movieData', JSON.stringify(movie));
+    Router.push({
+      pathname: `/${id}`,
+    });
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -23,33 +44,20 @@ const Home: NextPage = () => {
         </p>
 
         <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+          {movies.length ? (
+            movies.map((movie) => (
+              <a
+                key={movie.id}
+                className={styles.card}
+                onClick={() => handleClickMovie(movie)}
+              >
+                <h2>{movie.title}</h2>
+                <p>{movie.year}</p>
+              </a>
+            ))
+          ) : (
+            <p>{'No Movie Available :('}</p>
+          )}
         </div>
       </main>
 
@@ -66,7 +74,31 @@ const Home: NextPage = () => {
         </a>
       </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+  const data = await fetch(
+    'https://private-2fff44-bncfetest.apiary-mock.com/movies',
+    {
+      method: 'GET',
+    }
+  )
+    .then((response) => {
+      if (response.status === 200) {
+        console.log('Success fetch the data');
+        return response.json();
+      }
+      console.log('Failed fetch the data');
+    })
+    .then((result) => result)
+    .catch((err) => err);
+
+  return {
+    props: {
+      movies: data.data,
+    },
+  };
+};
+
+export default Home;
