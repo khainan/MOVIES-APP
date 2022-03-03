@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
-import classNames from 'classnames';
 
 // icon
 import hamburgerIcon from './assets/hamburger-icon.png';

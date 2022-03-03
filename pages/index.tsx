@@ -1,10 +1,12 @@
 import type { GetServerSideProps, NextPage } from 'next';
 import Router from 'next/router';
 import Head from 'next/head';
+import Image from 'next/image';
 
 // assets
 import homeIcon from '../public/assets/home-icon.png';
 import starIcon from '../public/assets/star-icon.png';
+import ratingIcon from '../public/assets/rating-icon.png';
 
 // components
 import HeaderSidebar from '../src/components/HeaderSidebar';
@@ -58,7 +60,17 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
           {movies.length &&
             movies.map((movie, movieIndex) => (
               <div key={movieIndex} className={styles['movie-card']}>
-                <div className={styles['movie-card-container']} style={{backgroundImage: `url(${movie.imageUrl})`}}>
+                <div
+                  className={styles['movie-card-container']}
+                  style={{ backgroundImage: `url(${movie.imageUrl})` }}
+                >
+                  <div className={styles['movie-card-header']}>
+                    <h4>{movie.title}</h4>
+                    <div className={styles['movie-card-rating']}>
+                      <Image alt="" src={ratingIcon} width={16} height={16} />
+                      <p>{`x${movie.rating}`}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
