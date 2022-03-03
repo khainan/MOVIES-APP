@@ -54,7 +54,15 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HeaderSidebar menus={menus}>
-        <div className={styles.content}>Test Content</div>
+        <div className={styles.content}>
+          {movies.length &&
+            movies.map((movie, movieIndex) => (
+              <div key={movieIndex} className={styles['movie-card']}>
+                <div className={styles['movie-card-container']} style={{backgroundImage: `url(${movie.imageUrl})`}}>
+                </div>
+              </div>
+            ))}
+        </div>
       </HeaderSidebar>
     </div>
   );
