@@ -6,10 +6,6 @@ import Image from 'next/image';
 // assets
 import homeIcon from '../public/assets/home-icon.png';
 import starIcon from '../public/assets/star-icon.png';
-import ratingIcon from '../public/assets/rating-icon.png';
-import likeIcon from '../public/assets/like-icon.png';
-import viewsIcon from '../public/assets/views-icon.png';
-import dislikeIcon from '../public/assets/dislike-icon.png';
 
 // components
 import HeaderSidebar from '../src/components/HeaderSidebar';
@@ -17,6 +13,7 @@ import HeaderSidebar from '../src/components/HeaderSidebar';
 // styles
 import styles from '../styles/Home.module.scss';
 import { useState } from 'react';
+import MovieCard from '../src/components/MovieCard/MovieCard';
 
 type Movies = {
   id: string;
@@ -92,31 +89,7 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
         <div className={styles.content} onScroll={handleInfiniteScroll}>
           {movieLists.length &&
             movieLists.map((movie, movieIndex) => (
-              <div key={movieIndex} className={styles['movie-card']}>
-                <div
-                  className={styles['movie-card-container']}
-                  style={{ backgroundImage: `url(${movie.imageUrl})` }}
-                >
-                  <div className={styles['movie-card-header']}>
-                    <h4>{`${movie.title} (${movie.year})`}</h4>
-                    <div className={styles['movie-card-rating']}>
-                      <Image alt="" src={ratingIcon} width={16} height={16} />
-                      <p>{`x${movie.rating}`}</p>
-                    </div>
-                  </div>
-                  <div className={styles['movie-card-content']}>
-                    <div className={styles['eye-icon']}>
-                      <Image alt="" src={viewsIcon} width={24} height={24} />
-                    </div>
-                    <div className={styles['like-icon']}>
-                      <Image alt="" src={likeIcon} width={24} height={24} />
-                    </div>
-                    <div className={styles['dislike-icon']}>
-                      <Image alt="" src={dislikeIcon} width={24} height={24} />
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <MovieCard movie={movie} key={movieIndex} />
             ))}
         </div>
       </HeaderSidebar>
