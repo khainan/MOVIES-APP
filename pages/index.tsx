@@ -16,6 +16,7 @@ import HeaderSidebar from '../src/components/HeaderSidebar';
 
 // styles
 import styles from '../styles/Home.module.scss';
+import { useState } from 'react';
 
 type Movies = {
   id: string;
@@ -30,6 +31,8 @@ interface IHomeProps {
 }
 
 const Home: NextPage<IHomeProps> = ({ movies }) => {
+  const [movieLists, setMovieLists] = useState(movies.slice(0, 10));
+
   const menus = [
     {
       icon: homeIcon,
@@ -51,6 +54,33 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
     });
   };
 
+  const handleInfiniteScroll = async (event: any) => {
+    const { scrollHeight, scrollTop, offsetHeight } = event.currentTarget || {};
+    const scrollThreshold = scrollTop + offsetHeight + 10;
+
+    if (scrollThreshold > scrollHeight) {
+      const data = await fetch(
+        'https://private-2fff44-bncfetest.apiary-mock.com/movies',
+        {
+          method: 'GET',
+        }
+      )
+        .then((response) => {
+          if (response.status === 200) {
+            console.log('Success fetch the data');
+            return response.json();
+          }
+          console.log('Failed fetch the data');
+        })
+        .then((result) => result)
+        .catch((err) => err);
+
+      if (data.data) {
+        setMovieLists(movieLists.concat(data.data.slice(0, 10)));
+      }
+    }
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -59,9 +89,9 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HeaderSidebar menus={menus}>
-        <div className={styles.content}>
-          {movies.length &&
-            movies.map((movie, movieIndex) => (
+        <div className={styles.content} onScroll={handleInfiniteScroll}>
+          {movieLists.length &&
+            movieLists.map((movie, movieIndex) => (
               <div key={movieIndex} className={styles['movie-card']}>
                 <div
                   className={styles['movie-card-container']}
@@ -103,7 +133,6 @@ export const getServerSideProps: GetServerSideProps<IHomeProps> = async () => {
   )
     .then((response) => {
       if (response.status === 200) {
-        console.log('Success fetch the data');
         return response.json();
       }
       console.log('Failed fetch the data');
