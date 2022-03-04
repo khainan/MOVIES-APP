@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
+import Router from 'next/router';
 
 // icon
 import hamburgerIcon from './assets/hamburger-icon.png';
@@ -16,6 +17,7 @@ import styles from './HeaderSidebar.module.scss';
 type Menu = {
   icon: any;
   key: string;
+  path: string;
   title: string;
 };
 interface IHeaderSidebarProps {
@@ -42,6 +44,10 @@ const HeaderSidebar = (props: IHeaderSidebarProps) => {
   const handleSetLanguage = (lang: string) => {
     localStorage.setItem('lang', lang);
     setLanguage(lang);
+  };
+
+  const handleChangePage = (path: string) => {
+    Router.replace(path);
   };
 
   useEffect(() => {
@@ -96,7 +102,11 @@ const HeaderSidebar = (props: IHeaderSidebarProps) => {
           }
         >
           {(menus || []).map((menu: Menu, index: number) => (
-            <div className={styles['dashboard-sidebar-menu']} key={index}>
+            <div
+              className={styles['dashboard-sidebar-menu']}
+              key={index}
+              onClick={() => handleChangePage(menu.path)}
+            >
               <Image alt="" src={menu.icon} width={24} height={24} />
               <p>{menu.title}</p>
             </div>

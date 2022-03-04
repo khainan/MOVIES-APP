@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
 
@@ -21,12 +21,12 @@ type Movies = {
   imageUrl: string;
 };
 
-interface IHomeProps {
+interface IFavoriteProps {
   movies: Movies[];
 }
 
-const Home: NextPage<IHomeProps> = ({ movies }) => {
-  const [movieLists, setMovieLists] = useState(movies.slice(0, 10));
+const Favorite: NextPage<IFavoriteProps> = () => {
+  const [movieLists, setMovieLists] = useState([]);
 
   const menus = [
     {
@@ -89,27 +89,4 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps<IHomeProps> = async () => {
-  const data = await fetch(
-    'https://private-2fff44-bncfetest.apiary-mock.com/movies',
-    {
-      method: 'GET',
-    }
-  )
-    .then((response) => {
-      if (response.status === 200) {
-        return response.json();
-      }
-      console.log('Failed fetch the data');
-    })
-    .then((result) => result)
-    .catch((err) => err);
-
-  return {
-    props: {
-      movies: data.data,
-    },
-  };
-};
-
-export default Home;
+export default Favorite;

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Router from 'next/router';
 
 // assets
 import ratingIcon from './assets/rating-icon.png';
@@ -24,6 +25,13 @@ interface IMovieCards {
 const MovieCard = (props: IMovieCards) => {
   const { movie } = props || {};
 
+  const handleClickMovie = () => {
+    localStorage.setItem('movieData', JSON.stringify(movie));
+    Router.push({
+      pathname: `/${movie.id}`,
+    });
+  };
+
   return (
     <div className={styles['movie-card']}>
       <div
@@ -38,7 +46,7 @@ const MovieCard = (props: IMovieCards) => {
           </div>
         </div>
         <div className={styles['movie-card-content']}>
-          <div className={styles['eye-icon']}>
+          <div className={styles['eye-icon']} onClick={handleClickMovie}>
             <Image alt="" src={viewsIcon} width={24} height={24} />
           </div>
           <div className={styles['like-icon']}>
