@@ -55,6 +55,38 @@
   }
 }
 
+.language {
+  display: flex;
+  height: 24px;
+  width: 60px;
+  align-items: center;
+  justify-content: space-between;
+  margin-left: 12px;
+  
+  &-separator {
+    width: 2px;
+    height: 100%;
+    background-color: #fff;
+    margin: 0 8px;
+  }
+
+  img {
+    opacity: 0.4;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  img:hover {
+    opacity: 0.8;
+  }
+
+  .active {
+    opacity: 1;
+  }
+}
+
 .dashboard-sidebar {
   background-color: #fff;
   padding-top: 24px;

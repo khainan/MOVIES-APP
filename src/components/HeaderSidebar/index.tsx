@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 // icon
 import hamburgerIcon from './assets/hamburger-icon.png';
 import userIcon from './assets/user.png';
+import unitedKingdomIcon from './assets/united-kingdom.png';
+import indonesiaIcon from './assets/indonesia.png';
 
 // styles
 import styles from './HeaderSidebar.module.scss';
@@ -21,6 +23,7 @@ interface IHeaderSidebarProps {
 const HeaderSidebar = (props: IHeaderSidebarProps) => {
   const { menus } = props || {};
   const [open, setOpen] = useState(false);
+  const [language, setLanguage] = useState('EN');
   const ref = useRef<HTMLDivElement>(null);
 
   const handleOpenSidebar = () => {
@@ -48,6 +51,23 @@ const HeaderSidebar = (props: IHeaderSidebarProps) => {
           <div className={styles['dashboard-header-logo']}>
             <div className={styles['hamburger-icon']}>
               <Image src={hamburgerIcon} alt="" onClick={handleOpenSidebar} />
+            </div>
+            <div className={styles.language}>
+              <Image
+                className={language === 'EN' ? styles.active : ''}
+                alt=""
+                src={unitedKingdomIcon}
+                width={24}
+                height={24}
+              />
+              <span className={styles['language-separator']} />
+              <Image
+                className={language === 'ID' ? styles.active : ''}
+                alt=""
+                src={indonesiaIcon}
+                width={24}
+                height={24}
+              />
             </div>
             <h1></h1>
           </div>
