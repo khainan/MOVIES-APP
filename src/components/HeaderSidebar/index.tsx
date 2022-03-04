@@ -7,6 +7,9 @@ import userIcon from './assets/user.png';
 import unitedKingdomIcon from './assets/united-kingdom.png';
 import indonesiaIcon from './assets/indonesia.png';
 
+// utils
+import { translate } from '../../utils/translate';
+
 // styles
 import styles from './HeaderSidebar.module.scss';
 
@@ -23,7 +26,7 @@ interface IHeaderSidebarProps {
 const HeaderSidebar = (props: IHeaderSidebarProps) => {
   const { menus } = props || {};
   const [open, setOpen] = useState(false);
-  const [language, setLanguage] = useState('EN');
+  const [language, setLanguage] = useState('en');
   const ref = useRef<HTMLDivElement>(null);
 
   const handleOpenSidebar = () => {
@@ -34,6 +37,11 @@ const HeaderSidebar = (props: IHeaderSidebarProps) => {
     if (ref.current && !ref.current.contains(e.target)) {
       setOpen(false);
     }
+  };
+
+  const handleSetLanguage = (lang: string) => {
+    localStorage.setItem('lang', lang);
+    setLanguage(lang);
   };
 
   useEffect(() => {
@@ -54,26 +62,28 @@ const HeaderSidebar = (props: IHeaderSidebarProps) => {
             </div>
             <div className={styles.language}>
               <Image
-                className={language === 'EN' ? styles.active : ''}
+                className={language === 'en' ? styles.active : ''}
                 alt=""
                 src={unitedKingdomIcon}
                 width={24}
                 height={24}
+                onClick={() => handleSetLanguage('en')}
               />
               <span className={styles['language-separator']} />
               <Image
-                className={language === 'ID' ? styles.active : ''}
+                className={language === 'id' ? styles.active : ''}
                 alt=""
                 src={indonesiaIcon}
                 width={24}
                 height={24}
+                onClick={() => handleSetLanguage('id')}
               />
             </div>
             <h1></h1>
           </div>
           <div className={styles['dashboard-header-user']}>
             <p>
-              Hello, <span>{'User Name'}</span>
+              {translate('hello', language)} , <span>{'User Name'}</span>
             </p>
             <Image alt="" src={userIcon} width={24} height={24} />
           </div>
