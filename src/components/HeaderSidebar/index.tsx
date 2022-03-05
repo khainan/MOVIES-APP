@@ -21,14 +21,16 @@ type Menu = {
   title: string;
 };
 interface IHeaderSidebarProps {
-  menus: Menu[];
   children: any;
+  language: string;
+  menus: Menu[];
+  onChangeLanguage: any;
 }
 
 const HeaderSidebar = (props: IHeaderSidebarProps) => {
-  const { menus } = props || {};
+  const { menus, language, onChangeLanguage } = props || {};
   const [open, setOpen] = useState(false);
-  const [language, setLanguage] = useState('en');
+
   const ref = useRef<HTMLDivElement>(null);
 
   const handleOpenSidebar = () => {
@@ -42,8 +44,7 @@ const HeaderSidebar = (props: IHeaderSidebarProps) => {
   };
 
   const handleSetLanguage = (lang: string) => {
-    localStorage.setItem('lang', lang);
-    setLanguage(lang);
+    onChangeLanguage(lang);
   };
 
   const handleChangePage = (path: string) => {
