@@ -1,6 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { useEffect, useState, useCallback } from 'react';
 
 // assets
 import homeIcon from '../public/assets/home-icon.png';
@@ -12,6 +13,9 @@ import MovieCard from '../src/components/MovieCard/MovieCard';
 
 // styles
 import styles from '../styles/Home.module.scss';
+
+// utils
+import { translate } from '../src/utils/translate';
 
 type Movies = {
   id: string;
@@ -44,40 +48,25 @@ const Favorite: NextPage<IFavoriteProps> = () => {
     },
   ];
 
-  const handleInfiniteScroll = async (event: any) => {
-    const { scrollHeight, scrollTop, offsetHeight } = event.currentTarget || {};
-    const scrollThreshold = scrollTop + offsetHeight + 10;
+  const handleGetLikes = useCallback(() => {
+    const likes: any = localStorage.getItem('likes') || [];
+    const parsedLikes = likes.length ? JSON.parse(likes) : [];
 
-    if (scrollThreshold > scrollHeight) {
-      const data = await fetch(
-        'https://private-2fff44-bncfetest.apiary-mock.com/movies',
-        {
-          method: 'GET',
-        }
-      )
-        .then((response) => {
-          if (response.status === 200) {
-            console.log('Success fetch the data');
-            return response.json();
-          }
-          console.log('Failed fetch the data');
-        })
-        .then((result) => result)
-        .catch((err) => err);
-
-      if (data.data) {
-        setMovieLists(movieLists.concat(data.data.slice(0, 10)));
-      }
-    }
-  };
+    setMovieLists(parsedLikes);
+  }, []);
 
   const handleChangeLanguage = (lang: string) => {
     setLanguage(lang);
   };
 
+  const handleUpdateMovie = (movie: any) => {
+    setMovieLists(movie);
+  };
+
   useEffect(() => {
     localStorage.setItem('lang', language);
-  }, [language]);
+    handleGetLikes();
+  }, [language, handleGetLikes]);
 
   return (
     <div className={styles.container}>
@@ -91,11 +80,25 @@ const Favorite: NextPage<IFavoriteProps> = () => {
         language={language}
         onChangeLanguage={(lang: string) => handleChangeLanguage(lang)}
       >
-        <div className={styles.content} onScroll={handleInfiniteScroll}>
-          {movieLists.length &&
-            movieLists.map((movie, movieIndex) => (
-              <MovieCard movie={movie} key={movieIndex} />
-            ))}
+        <div className={styles.wrapper}>
+          <div className={styles.content}>
+            {movieLists.length ? (
+              movieLists.map((movie, movieIndex) => (
+                <MovieCard
+                  movie={movie}
+                  key={movieIndex}
+                  showDeleteIcon
+                  onDeleteMovie={(movie: Movies) => handleUpdateMovie(movie)}
+                />
+              ))
+            ) : (
+              <div className={styles['empty-favorite']}>
+                <Image alt="" src={starIcon} width={40} height={40} />
+                <h5>{translate('emptyFavoriteTitle', language)}</h5>
+                <p>{translate('emptyFavoriteDescription', language)} <strong>Home</strong>.</p>
+              </div>
+            )}
+          </div>
         </div>
       </HeaderSidebar>
     </div>

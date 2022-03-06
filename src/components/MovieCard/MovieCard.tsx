@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Router from 'next/router';
 
@@ -7,6 +7,7 @@ import ratingIcon from './assets/rating-icon.png';
 import likeIcon from './assets/like-icon.png';
 import viewsIcon from './assets/views-icon.png';
 import unlikeIcon from './assets/unlike-icon.png';
+import trashIcon from './assets/trash-icon.png';
 
 // styles
 import styles from './MovieCard.module.scss';
@@ -21,18 +22,35 @@ type Movies = {
 
 interface IMovieCards {
   movie: Movies;
+  showDeleteIcon: boolean;
+  onDeleteMovie: any;
 }
 
 const MovieCard = (props: IMovieCards) => {
   const [liked, setLiked] = useState(false);
-  const { movie } = props || {};
+  const [likes, setLikes] = useState([]);
+  const { movie, showDeleteIcon, onDeleteMovie } = props || {};
 
-  const handleGetLikes = () => {
+  const handleGetLikes = useCallback(() => {
     const likes: any = localStorage.getItem('likes') || [];
     const parsedLikes = likes.length ? JSON.parse(likes) : [];
-    const data: Movies[] = [...parsedLikes];
 
-    return data;
+    parsedLikes.map((val: any) => {
+      if (val.id === movie.id) {
+        setLiked(true);
+      }
+    });
+
+    setLikes(parsedLikes);
+    return parsedLikes;
+  }, [movie]);
+
+  const handleDeleteMovie = () => {
+    let newLikes: Movies[] = handleGetLikes();
+    newLikes = newLikes.filter((val) => val.id !== movie.id);
+    localStorage.setItem('likes', JSON.stringify(newLikes));
+    onDeleteMovie(newLikes);
+    setLiked(false);
   };
 
   const handleClickMovie = () => {
@@ -50,20 +68,13 @@ const MovieCard = (props: IMovieCards) => {
       localStorage.setItem('likes', JSON.stringify(newLikes));
       setLiked(true);
     } else {
-      newLikes = newLikes.filter(val => val.id !== movie.id);
-      localStorage.setItem('likes', JSON.stringify(newLikes));
-      setLiked(false)
+      handleDeleteMovie();
     }
   };
 
   useEffect(() => {
-    const newLikes = handleGetLikes();
-    newLikes.map((val) => {
-      if (val.id === movie.id) {
-        setLiked(true);
-      }
-    });
-  }, [movie]);
+    handleGetLikes();
+  }, [handleGetLikes]);
 
   return (
     <div className={styles['movie-card']}>
@@ -79,20 +90,28 @@ const MovieCard = (props: IMovieCards) => {
           </div>
         </div>
         <div className={styles['movie-card-content']}>
-          <div className={styles['views-icon']} onClick={handleClickMovie}>
-            <Image alt="" src={viewsIcon} width={34} height={34} />
-          </div>
-          <div
-            className={liked ? styles['like-icon'] : styles['unlike-icon']}
-            onClick={handleLikeMovie}
-          >
-            <Image
-              alt=""
-              src={liked ? likeIcon : unlikeIcon}
-              width={34}
-              height={34}
-            />
-          </div>
+          {!showDeleteIcon ? (
+            <>
+              <div className={styles['views-icon']} onClick={handleClickMovie}>
+                <Image alt="" src={viewsIcon} width={34} height={34} />
+              </div>
+              <div
+                className={liked ? styles['like-icon'] : styles['unlike-icon']}
+                onClick={handleLikeMovie}
+              >
+                <Image
+                  alt=""
+                  src={liked ? likeIcon : unlikeIcon}
+                  width={34}
+                  height={34}
+                />
+              </div>
+            </>
+          ) : (
+            <div className={styles['delete-icon']} onClick={handleDeleteMovie}>
+              <Image alt="" src={trashIcon} width={34} height={34} />
+            </div>
+          )}
         </div>
       </div>
     </div>

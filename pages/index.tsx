@@ -80,7 +80,7 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
 
   useEffect(() => {
     localStorage.setItem('lang', language);
-  }, [language])
+  }, [language]);
 
   return (
     <div className={styles.container}>
@@ -102,7 +102,12 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
           <div className={styles.content}>
             {movieLists.length &&
               movieLists.map((movie, movieIndex) => (
-                <MovieCard movie={movie} key={movieIndex} />
+                <MovieCard
+                  movie={movie}
+                  key={movieIndex}
+                  showDeleteIcon={false}
+                  onDeleteMovie={() => {}}
+                />
               ))}
           </div>
         </div>
