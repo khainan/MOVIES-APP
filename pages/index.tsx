@@ -76,6 +76,7 @@ const Home: NextPage<IHomeProps> = ({ movies }) => {
 
   const handleChangeLanguage = (lang: string) => {
     setLanguage(lang);
+    localStorage.setItem('lang', lang);
   };
 
   useEffect(() => {

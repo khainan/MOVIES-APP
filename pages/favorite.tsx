@@ -57,6 +57,7 @@ const Favorite: NextPage<IFavoriteProps> = () => {
 
   const handleChangeLanguage = (lang: string) => {
     setLanguage(lang);
+    localStorage.setItem('lang', lang);
   };
 
   const handleUpdateMovie = (movie: any) => {
